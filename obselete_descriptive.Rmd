@@ -1,0 +1,418 @@
+---
+title: "CRN北美性少数政治倾向调查问卷"
+output: rmarkdown::github_document
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(# fig.width=12, fig.height=8, 
+                      fig.path='figs_model/',
+                      echo=FALSE, warning=FALSE, message=FALSE, results = 'hide')
+Sys.setlocale("LC_ALL", locale="chs")
+```
+
+```{r loading}
+d = read.csv("../Data/Data.csv", sep = ",", stringsAsFactors = F, skip = 1, fileEncoding = "UTF-8-BOM")
+d$place_residence[which(d$place_residence == "new jeresy")] = "New Jersey"
+
+codebook = read.csv("../Data/codebook.csv", sep = ",", stringsAsFactors = F, fileEncoding = "UTF-8-BOM")
+
+
+# libriries
+library(ggplot2)
+library(ggmap)
+library(maps)
+library(mapdata)
+library(rgeos)
+library(rgdal)
+library(maptools)
+library(fiftystater)
+library(knitr)
+library(stargazer)
+library(PerformanceAnalytics)
+library(gmodels)
+library(vcdExtra)
+source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+
+# US map
+data("fifty_states")
+# China map
+cn_map = readShapePoly('../Data/map/bou2_4p.shp')
+```
+
+## 样本人群个人信息总结
+
+### 受访者地图
+受访者的现居住地分布比较两极化。纽约和加州是这次受访者的主要居住地。其中23.6%的人居住在加州，22.54%的受访者居住在纽约州。加起来已经接近总人数的一半。中部有许多州没有样本。绝大部分的受访者居住在美国。但也有共六位来自加拿大的卑诗省和魁北克。
+
+```{r, fig.width=12, fig.height=10, out.width="100%"}
+# States of residence
+d$place_residence = tolower(d$place_residence)
+# prop.table(table(d$place_residence))
+
+# Map of sample: USA
+sum_residence = as.data.frame(table(d$place_residence))
+names(sum_residence) = c("state", "n_resp")
+
+# sum_residence[!(sum_residence$state %in% fifty_states$id),]
+
+sum_residence = merge(sum_residence, data.frame(state = unique(fifty_states$id)), by = "state", all.y = T)
+
+ggplot(sum_residence, aes(map_id = state)) + geom_map(aes(fill = n_resp), color = "white", map = fifty_states)+ 
+  expand_limits(x = fifty_states$long, y = fifty_states$lat) +
+  coord_map() +
+  scale_x_continuous(breaks = NULL) + 
+  scale_y_continuous(breaks = NULL) + scale_fill_gradient(high = "darkblue",low = "lightblue", na.value = "gray") +
+  labs(x = "", y = "") +
+  theme(legend.position = "bottom", panel.background = element_blank(), legend.title=element_blank()) + 
+  ggtitle("受访者所在州分布（单位：人）")
+
+```
+
+受访者的家乡（出生地）分布比较均匀，覆盖了中国大陆除新疆、西藏、宁夏之外的所有省份。其中来自福建、广东、江苏、湖北的受访者最多。中国大陆以外，此次问卷也有台湾、香港、澳门、新加坡的朋友参与。
+```{r}
+# Map of sample: China
+cn_map2 = fortify(cn_map, region = "NAME")
+
+cn_prov_list = as.character(unique(d$place_birth))
+cn_prov_list = cn_prov_list[order(cn_prov_list)]
+cn_prov_list = data.frame(place_birth = cn_prov_list, place_birth_r = c(NA, substr(cn_prov_list[2:29], 2, 99), "台湾省", "香港特别行政区", NA))
+# cn_prov_list
+
+d = merge(d, cn_prov_list, by = "place_birth")
+
+sum_birth_place = as.data.frame(table(d$place_birth_r, useNA = "no"))
+names(sum_birth_place) = c("cn_prov", "count")
+
+sum_birth_place = merge(sum_birth_place, data.frame(cn_prov = unique(cn_map2$id)), by = "cn_prov", all.y = T)
+
+ggplot(sum_birth_place, aes(map_id = cn_prov)) + geom_map(aes(fill = count), color = "white", map = cn_map2)+ 
+  expand_limits(x = cn_map2$long, y = cn_map2$lat) +
+  coord_map() +
+  scale_x_continuous(breaks = NULL) + 
+  scale_y_continuous(breaks = NULL) + scale_fill_gradient(high = "darkblue",low = "lightblue", na.value = "gray") +
+  labs(x = "", y = "") +
+  theme(legend.position = "bottom", panel.background = element_blank(), legend.title=element_blank()) + 
+  ggtitle("受访者家乡分布（单位：人）")
+```
+
+## 年龄和在北美居住的年限
+受访者的平均年龄大概是29岁，最年轻的受访者19岁，而最大的几位受访者的年龄在47岁以上。受访者平均在北美居住了六年，其中最少的今年刚到，最多以为的已经居住了27年以上。受访人平均到达北美的约为22岁，而且绝大部分都在20-30岁之间到达北美。这几项的分布都非常好，说明我们的样本质量好，能据此做出一些让人信服的推断。
+
+```{r}
+# Age
+# table(d$yr_birth)
+d$yr_birth[d$yr_birth == "1970及之前"] = 1970
+d$yr_birth = as.numeric(d$yr_birth)
+d$age = 2017 - d$yr_birth
+
+cat("年龄：")
+summary(2017 - d$yr_birth)
+ggplot(d, aes(2017 - yr_birth)) + geom_histogram(bins = 15) + ylab("人数") + xlab("年龄") + ggtitle("受访者年龄")
+
+# number of years in north america
+# table(d$yr_arrive_am)
+d$yr_arrive_am[d$yr_arrive_am == "1990年以前"] = 1990
+d$yr_arrive_am = as.numeric(d$yr_arrive_am)
+
+# age arrive at US
+cat("在北美居住年限")
+summary(d$yr_arrive_am - d$yr_birth)
+
+ggplot(d, aes(y = 2017 - yr_arrive_am, x = 2017 - yr_birth)) + geom_jitter(alpha = 0.5) + ylab("在北美居住年限") + xlab("受访者年龄") +
+  ggtitle("年龄和北美居住年限")
+
+cat("到达北美的年龄")
+summary(2017 - d$yr_arrive_am)
+ggplot(d, aes(2017 - yr_arrive_am)) + geom_histogram(bins = 15) + ylab("人数") + xlab("年龄") + ggtitle("在北美居住年限")
+```
+
+## 性别和性取向
+大约九成的受访者的生理与心理性别一致（即我们所说的“顺性别”者）。而8%的受访者认为自己的心理性别既是男性也是女性。在性取向方面，约九成受访者心理性别为男性、性取向为男性（即LGBT中的G）。
+```{r}
+# Biological and Psychological gender
+round(prop.table(table(心理性别 = d$gender_psy, 生理性别= d$gender_bio)), 2)
+# Gender and Sex orientation
+round(prop.table(table(心理性别 = d$gender_psy, 性取向= d$sex_orien)), 2)
+
+```
+
+## 情感、婚姻、生育
+受访者中单身和非单身的人群大概对半分，并且有接近两成的受访者已经结婚。同时，大概有37%的受访者目前没有小孩，但有要小孩的打算。对比处于不同情感婚姻状态之中的受访者，非单身的受访者的生育意愿显然更强。
+```{r}
+kable(round(prop.table(table(情感婚姻 = d$marriage, 小孩 = d$child)), 2))
+
+```
+
+## 教育
+```{r}
+edu_first_am = factor(d$edu_first_am, levels = unique(d$edu_first_am)[c(4,7,5,3,2,1,6)])
+levels(edu_first_am) = c("小学", "初中", "高中/高职", "本科", "研究生", "博士", NA)
+ggplot(as.data.frame(prop.table(table(edu_first_am))), aes(x = edu_first_am, y = Freq)) + geom_bar(stat = "identity")
+
+```
+
+## 收入
+```{r}
+income = factor(d$income, levels = sort(unique(d$income))[c(1,2,11,13:19,3:10,12)])
+
+ggplot(as.data.frame(prop.table(table(income))), aes(x = income, y = Freq)) + geom_bar(stat = "identity")  + coord_flip()
+
+income_n = income
+levels(income_n) = c(seq(5000, 175000, 10000), 205000)
+income_n = as.numeric(as.character(income_n))
+d$income_n = income_n
+
+qplot(income_n, geom = "histogram", bins = 12)
+
+```
+
+# 政治观点
+
+## 关心政治的程度
+
+```{r}
+
+# 用了多少时间在媒体上
+table(d$media_time)
+
+# 花在政治媒体时间上的比例。绝大部分在政治类媒体上花的时间并不多
+table(d$media_time.1)
+prop.table(table(d$media_time.1))
+
+# 花在中文媒体时间上的比例
+# 大部分人主要消费的还是中文媒体
+round(prop.table(table(d$media_time_cn)), 2)
+
+```
+
+## 党派认同，候选人支持
+
+比起关心中国政治，更多人关心美国政治。党派身份认同。中间选民比例最大，民主党次之，共和党最少。其中，STEM专业的人有更多的共和党支持者。学生中较少共和党支持者。有关对2016年大选候选人的支持：初选的桑德斯支持者和希拉里支持者一样多，大约三成。紧接着是川普，拿到了13%的支持。大选时希拉里的支持率有六成，川普两成，而有两成的人选择不投票（不管是初选还是大选，弃权率都是比较高的。大概都有两成的人)。大选弃权的（这两成）人是谁呢？我们可以看到大概两成多是首轮支持桑德斯的人，七成是首轮就不投票的人。。对党候选人和大选候选人的支持度有什么关系呢？首轮桑德斯支持者中只有78%在大选会投给希拉里，有16%会弃权， 6%会投给希拉里。大选弃权的（这两成）人是谁呢？我们可以看到大概两成多是首轮支持桑德斯的人，七成是首轮就不投票的人。自我认同为共和党的人中有14%会投给希拉里。而自我认同民主党人仅有3%会投给川普。自我认同无党派的人有接近一半会投给希拉里、接近两成投给川普。弃权的人大部分来自没有党派认同的人。
+
+这些发现既和2016年大选的总体趋势一致，也带有LGBT群体的鲜明特征。首先，桑德斯作为在政治倾向上对LGBT群体最友好，以及在其他政治议题上最liberal的候选人，得到LGBT群体的支持非常正常。第二，桑德斯被淘汰出局后，一部分人并不会转投希拉里，而是选择了弃权甚至支持川普。第三，此次大选的候选人普遍黑点比较多，支持率不高，于是选择弃权的人也较多（占了两成）。第三，在我们LGBT群体内部，STEM专业人士中更多人支持川普，这大概是因为川普的的政策对这些行业的从业者有利。而学生更大比例支持民主党，于高校偏liberal的意识形态有关。
+```{r}
+# 比起关心中国政治，更多人关心美国政治
+round(prop.table(table(d$interest_politics_cn)), 2)
+round(prop.table(table(d$interest_politics_us)), 2)
+
+# 党派身份认同。中间选民比例最大
+round(prop.table(table(d$party_id)), 2)
+  # 党派身份和专业。STEM更多共和党支持者
+round(prop.table(table(d$party_id, d$edu_stem), margin = 2), 2)
+  # 党派身份和收入
+round(prop.table(table(d$party_id, d$income), margin = 2), 2)
+
+table(d$edu_stem)
+  # 党派身份和学生。学生更少共和党支持者
+round(prop.table(table(d$party_id, d$student), margin = 2), 2)
+  # 党派身份和研究工作者。没什么关系
+round(prop.table(table(d$party_id, d$job_univ_research), margin = 2), 2)
+
+
+# 候选人支持。
+# 初选的桑德斯支持者和希拉里支持者一样多，大约三成。紧接着是川普，拿到了13%的支持
+# 大选时希拉里的支持率有六成，川普两成，而有两成的人选择不投票。这些人是谁呢（下面）
+# 不管是初选还是大选，弃权率都是比较高的。大概都有两成的人。
+d$vote_primary16 = factor(d$vote_primary16)
+levels(d$vote_primary16) = c("Sanders", "Clinton", "Trump", "Kasich", "Rubio", "Cruz", "不投票", "其他")
+
+d$vote_gen16 = factor(d$vote_gen16)
+levels(d$vote_gen16) = c("Trump", "Clinton", "不投票")
+
+round(prop.table(table(d$vote_primary16)), 2)
+round(prop.table(table(d$vote_gen16)), 2)
+# 两轮投票意愿的tab. 
+# 
+# 首轮桑德斯支持者中只有78%在大选会投给希拉里，有16%会弃权， 6%会投给希拉里。
+# 大选弃权的（这两成）人是谁呢？我们可以看到大概两成多是首轮支持桑德斯的人，七成是首轮就不投票的人。
+round(prop.table(table(d$vote_primary16, d$vote_gen16)), 2)
+round(prop.table(table(d$vote_primary16, d$vote_gen16), 1), 2)
+round(prop.table(table(d$vote_primary16, d$vote_gen16), 2), 2)
+
+tab_vote_2r_full = xtabs(~ vote_primary16 + vote_gen16, data = d)
+tab_vote_2r_cut = xtabs(~ vote_primary16 + vote_gen16, data = d, exclude = c("Kasich", "Rubio", "Cruz", "其他"))
+
+tab_vote_2r_pid = xtabs(~ party_id + vote_primary16 + vote_gen16, data = d)
+
+```
+
+```{r, results='markup'}
+CrossTable(tab_vote_2r_full)
+```
+
+```{r, fig.width=12, fig.height=5}
+mosaicplot(tab_vote_2r_full, main = "初选大选投票意向", xlab = "初选", ylab = "大选", shade = T)
+```
+
+```{r, fig.width=5, fig.height=5}
+mosaicplot(tab_vote_2r_cut, main = "初选大选投票意向", xlab = "初选", ylab = "大选", shade = T)
+```
+
+```{r, results="markup"}
+structable(tab_vote_2r_pid)
+```
+
+```{r, results="markup"}
+# 候选人支持和党派身份认同的相关度如何呢？
+# 还挺有意思的。自我认同为共和党的人中有14%会投给希拉里。而自我认同民主党人仅有3%会投给川普。自我认同无党派的人有接近一半会投给希拉里、接近两成投给川普。弃权的人大部分来自没有党派认同的人。
+CrossTable(xtabs(~ party_id + vote_gen16, data = d), prop.chisq = F)
+
+```
+
+
+## 身份认同
+
+接近七成的人认为自己和中国在很大程度上具有共同命运，而只有大概两成的人认为自己和美国有共同命运。接近八成的人认为自己和性少数群体拥有共同命运。认为和中国有共同命运的人也大多认为自己和lgbt群体有共同的命运。有四分之一的人在两个维度上的打分都是5. 这背后的机制可能是有些人就比较爱群体吧。美国人的身份是被放在最后的。44%的人认为自己的性少数的身份先于中国人的身份，而28%的人认为自己中国的身份先于性少数身份。 那身份认同的排序是否让LGBT群体认为性少数群体的利益要为国家利益让路呢?是的。"性少数 > 中国人 > 美国人" 的倾向于不同意（接近七成的人倾向于不同意）。而"中国人 > 性少数 > 美国人"倾向于同意（接近一半的人对这个说法保持中立，两成倾向于同意）。
+
+```{r}
+# 接近七成的人认为自己和中国在很大程度上具有共同命运，而只有大概两成的人认为自己和美国有共同命运。接近八成的人认为自己和性少数群体拥有共同命运。
+
+round(prop.table(table(d$linked_fate_cn)), 2)
+round(prop.table(table(d$linked_fate_us)), 2)
+round(prop.table(table(d$linked_fate_lgbt)), 2)
+
+# 认为和中国有共同命运的人也大多认为自己和lgbt群体有共同的命运。有四分之一的人在两个维度上的打分都是5. 这背后的机制可能是有些人就比较爱群体吧。
+CrossTable(xtabs( ~ linked_fate_cn + linked_fate_lgbt, data = d), prop.chisq = F)
+
+round(prop.table(table(linked_cn = d$linked_fate_cn, linked_lgbt = d$linked_fate_lgbt)), 2)
+round(prop.table(table(linked_cn = d$linked_fate_cn, linked_lgbt = d$linked_fate_lgbt), 1), 2)
+
+# 美国人的身份是被放在最后的。44%的人认为自己的性少数的身份先于中国人的身份，而28%的人认为自己中国的身份先于性少数身份。 
+round(prop.table(table(d$linked_fate_rank)), 2)
+
+# 那这个身份是否让LGBT群体认为性少数群体的利益要为国家利益让路呢.是的。"性少数 > 中国人 > 美国人" 的倾向于不同意（接近七成的人倾向于不同意）。而"中国人 > 性少数 > 美国人"倾向于同意（接近一半的人对这个说法保持中立，两成倾向于同意）。
+round(prop.table(table(d$patriotism_over_lgbt_right)), 2)
+CrossTable(xtabs( ~ linked_fate_rank + patriotism_over_lgbt_right, data = d), prop.chisq = F)
+
+tab_link_fate_patriotism = as.data.frame(prop.table(table(linked_fate_rank = d$linked_fate_rank, patriotism_over_lgbt_right = d$patriotism_over_lgbt_right), 1))
+tab_link_fate_patriotism = as.data.frame(table(linked_fate_rank = d$linked_fate_rank, patriotism_over_lgbt_right = d$patriotism_over_lgbt_right))
+
+# tab_link_fate_patriotism = subset(tab_link_fate_patriotism, linked_fate_rank %in% c("性少数 > 中国人 > 美国人", "中国人 > 性少数 > 美国人"))
+tab_link_fate_patriotism$patriotism_over_lgbt_right = as.numeric(tab_link_fate_patriotism$patriotism_over_lgbt_right)
+```
+
+```{r}
+ggplot(tab_link_fate_patriotism, aes(x = patriotism_over_lgbt_right, y = Freq, colour = linked_fate_rank)) + geom_line() + geom_point() + theme_bw() + theme(legend.position = "bottom")
+```
+
+
+## 重要政策的态度
+
+```{r}
+d$lg_income_n = log(d$income_n)
+
+policy_all = c("redist_health_care", "redist_tax_high_income", "redist_welfare", "order_security_priority",
+               "patriotism", "patriotism_over_lgbt_right", 
+               "abortion_limit", "immigrant_illegal_deport", "immigrant_legal_control", "gun_control", "aa_race", "aa_gender", "democracy_not_for_china")
+
+policy_gen = c("redist_health_care", "redist_tax_high_income", "redist_welfare",
+               "order_security_priority", "patriotism", "patriotism_over_lgbt_right", "lg_income_n", "age") 
+               
+policy_am = c("abortion_limit", "immigrant_illegal_deport", "immigrant_legal_control", "gun_control", "aa_race", "aa_gender")
+
+cor.test(d[, "abortion_limit"], d[, "redist_health_care"], method = "spearman", exact = T)
+
+t = xtabs(~ abortion_limit + redist_health_care, data = d)
+
+heatmap(table(d[, c("abortion_limit", "redist_health_care")]), Rowv = F, Colv = F)
+?heatmap.2
+i = 2; j = 3
+
+cor_matrix = function(data){
+
+  par(mfrow = c(ncol(data), ncol(data)), oma = c(0,0,0,0) + 0.1,
+            mar = c(2,2,2,2))
+  for (i in 1:ncol(data)){
+    for (j in 1:ncol(data)){
+      if (i == j){
+        barplot(table(data[, i]), main = names(data)[i], col = "white")
+      } else if (i > j){
+        mosaicplot(xtabs(as.formula(paste("~", names(data)[i], "+" , names(data)[j])), data = data), main = NULL, shade = T, xlab = names(data)[i], ylab = names(data)[j], cex = 0.5)
+      } else if (i < j){
+        plot(1:11, 1:11, "n", xaxt="n", yaxt="n")
+        test = fisher.test(xtabs(as.formula(paste("~", paste(names(data)[c(i, j)], collapse = "+"))), data = data), simulate.p.value = T, B = 5000)
+        sig = ifelse(test$p.value<0.01, "***", ifelse(test$p.value<0.05, "**", ifelse(test$p.value<0.1, "*", " ")))
+        test2 = cor.test(data[,names(data)[i]], data[,names(data)[j]], method = "spearman", exact = T)
+        sig2 = ifelse(test2$p.value<0.01, "***", ifelse(test2$p.value<0.05, "**", ifelse(test2$p.value<0.1, "*", " ")))
+        correlation = cor( data[,names(data)[i]], data[,names(data)[j]], method = "spearman")
+        to_print = paste0(names(data)[j], "\n",names(data)[i], "\nFisher p=", round(test$p.value, 4), "\nSpearman Cor=", round(correlation, 2), "\nCor p=", round(test2$p.value, 4))
+        text(x = 6, y = 6,label = to_print, cex = 1.5)
+        text(x = 10, y = 10, label = sig2, col = "red", cex = 4)
+      }
+    }
+  }
+}
+
+
+
+# cor_matrix(d[, policy_gen])
+# cor_matrix(d[, policy_am])
+# cor_matrix(d[, c(policy_gen, policy_am)])
+
+
+names(d[, policy_am])
+
+table(d$student)
+d_notstudent = subset(d, student == "不是")
+d_student = subset(d, income_n != "是")
+
+# chart.Correlation(d[, policy_all], method = "spearman")
+# chart.Correlation(d_notstudent[, policy_all], method = "spearman")
+# chart.Correlation(d_student[, policy_all], method = "spearman")
+# 
+# chart.Correlation(d[, policy_gen], method = "spearman")
+# chart.Correlation(d_notstudent[, policy_gen], method = "spearman")
+# chart.Correlation(d_student[, policy_gen], method = "spearman")
+# 
+# chart.Correlation(d[, policy_am], method = "spearman")
+# chart.Correlation(d_notstudent[, policy_am], method = "spearman")
+# chart.Correlation(d_student[, policy_am], method = "spearman")
+# 
+# 
+# # 高收入比低收入税率更高
+# prop.table(table(d$redist_health_care))
+# ggplot(d, aes(x = redist_health_care)) + geom_bar()
+# # 政府应该制定福利政策促进社会公平，即使这样意味着要多收税
+# ggplot(d, aes(x = redist_tax_high_income)) + geom_bar()
+# # 有钱人理应买到比穷人更好的医疗服务
+# ggplot(d, aes(x = redist_welfare)) + geom_bar()
+# 
+# 
+# 
+# # 国家的有序和安全是社会的最高利益
+# ggplot(d, aes(x = order_security_priority)) + geom_bar()
+# 
+# # patriotism	爱国是一项重要的美德
+# ggplot(d, aes(x = patriotism)) + geom_bar()
+# # patriotism_over_lgbt_right	如果两者冲突，性少数群体的利益应该为国家利益让路
+# ggplot(d, aes(x = patriotism_over_lgbt_right)) + geom_bar()
+# 
+# # abortion_limit	堕胎应受到政府的严格限制
+# ggplot(d, aes(x = abortion_limit)) + geom_bar()
+# # immigrant_illegal_deport	非法移民应被驱逐出境
+# ggplot(d, aes(x = immigrant_illegal_deport)) + geom_bar()
+# # immigrant_legal_control	合法移民数量应该严格限制
+# ggplot(d, aes(x = immigrant_legal_control)) + geom_bar()
+# 
+# 
+# # gun_control	枪支应受到政府的严格管控
+# ggplot(d, aes(x = gun_control)) + geom_bar()
+# # marijuana_legal	大麻使用应该合法
+# ggplot(d, aes(x = marijuana_legal)) + geom_bar()
+# 
+# # aa_race	针对种族的平权法案(Affirmative Action)应该进一步推进
+# ggplot(d, aes(x = aa_race)) + geom_bar()
+# # aa_gender	针对性别的平权法案(Affirmative Action)应该进一步推进
+# ggplot(d, aes(x = aa_gender)) + geom_bar()
+# 
+# 
+# # democracy_not_for_china	西方民主制度不适合中国
+# ggplot(d, aes(x = democracy_not_for_china)) + geom_bar()
+# 
+# # left_right	总的来说，按照您对*美国*政治光谱中『左』和『右』的理解，您觉得您的政治立场的『左——右』位置是？（请按您此刻的总体感觉选择，若您实在不知道『左』『右』在美国代表什么或者您的立场大概在哪，请跳过此题）
+# ggplot(d, aes(x = left_right)) + geom_bar()
+
+
+
+
+```
