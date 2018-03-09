@@ -34,11 +34,11 @@ Sys.setlocale("LC_ALL", locale="chs")
   cn_map = readShapePoly('../Data/map/bou2_4p.shp')
 ```
 
-```{r}
+```{r, results='hide'}
 #------------------------------
 # Load data
 #------------------------------
-rm(list=ls())  
+rm(list=ls())
 # Load dataset and codebook
   d = read.csv("../Data/Data.csv", sep = ",", stringsAsFactors = F, skip = 1, fileEncoding = "UTF-8-BOM")
   d$place_residence[which(d$place_residence == "new jeresy")] = "New Jersey"
@@ -47,7 +47,6 @@ rm(list=ls())
 #------------------------------
 # Recode variables
 #------------------------------
-summary(d)
 
 # Demographics
 #-------------
