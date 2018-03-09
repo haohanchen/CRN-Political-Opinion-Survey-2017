@@ -1,4 +1,4 @@
-.Rmd
-.Rproj
-.R
-.tex
+*.Rmd
+*.Rproj
+*.R
+*.tex
