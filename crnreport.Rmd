@@ -345,17 +345,9 @@ cor_matrix = function(data){
 
 
 
-pdf("cor_matrix_policy_gen.pdf", width = 20, height = 16)
-cor_matrix(d[, policy_gen])
-dev.off()
-
-pdf("cor_matrix_policy_am.pdf", width = 20, height = 16)
-cor_matrix(d[, policy_am])
-dev.off()
-
-pdf("cor_matrix_policy_all.pdf", width = 50, height = 40)
-cor_matrix(d[, c(policy_gen, policy_am)])
-dev.off()
+# cor_matrix(d[, policy_gen])
+# cor_matrix(d[, policy_am])
+# cor_matrix(d[, c(policy_gen, policy_am)])
 
 
 names(d[, policy_am])

@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "2386461620",
     "id" : "B5E50700",
-    "lastKnownWriteTime" : 1520575468,
-    "last_content_update" : 1520575468852,
+    "lastKnownWriteTime" : 1520576286,
+    "last_content_update" : 1520576286928,
     "path" : "D:/Dropbox/WORK/CRN research/CRN Political Opinion Survey 2017/crnreport.Rmd",
     "project_path" : "crnreport.Rmd",
     "properties" : {
-        "cursorPosition" : "0,3",
-        "scrollLine" : "0"
+        "cursorPosition" : "347,29",
+        "scrollLine" : "335"
     },
     "relative_order" : 2,
     "source_on_save" : false,
