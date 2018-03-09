@@ -44,6 +44,8 @@ rm(list=ls())
   d$place_residence[which(d$place_residence == "new jeresy")] = "New Jersey"
   codebook = read.csv("../Data/codebook.csv", sep = ",", stringsAsFactors = F, fileEncoding = "UTF-8-BOM")
 
+  save.image(file = "../Data/Data.Rda")
+
 #------------------------------
 # Recode variables
 #------------------------------
