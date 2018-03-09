@@ -5,13 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2386461620",
+    "hash" : "0",
     "id" : "E1EE50F2",
     "lastKnownWriteTime" : 1520576286,
     "last_content_update" : 1520576286,
     "path" : "D:/Dropbox/WORK/CRN research/CRN Political Opinion Survey 2017/obselete_descriptive.Rmd",
     "project_path" : "obselete_descriptive.Rmd",
     "properties" : {
+        "cursorPosition" : "7,30",
+        "scrollLine" : "0"
     },
     "relative_order" : 3,
     "source_on_save" : false,
