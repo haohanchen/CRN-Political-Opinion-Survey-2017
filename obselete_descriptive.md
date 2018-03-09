@@ -8,16 +8,16 @@ CRN北美性少数政治倾向调查问卷
 
 受访者的现居住地分布比较两极化。纽约和加州是这次受访者的主要居住地。其中23.6%的人居住在加州，22.54%的受访者居住在纽约州。加起来已经接近总人数的一半。中部有许多州没有样本。绝大部分的受访者居住在美国。但也有共六位来自加拿大的卑诗省和魁北克。
 
-<img src="figs/unnamed-chunk-1-1.png" width="100%" />
+<img src="figs_model/unnamed-chunk-1-1.png" width="100%" />
 
-受访者的家乡（出生地）分布比较均匀，覆盖了中国大陆除新疆、西藏、宁夏之外的所有省份。其中来自福建、广东、江苏、湖北的受访者最多。中国大陆以外，此次问卷也有台湾、香港、澳门、新加坡的朋友参与。 ![](figs/unnamed-chunk-2-1.png)
+受访者的家乡（出生地）分布比较均匀，覆盖了中国大陆除新疆、西藏、宁夏之外的所有省份。其中来自福建、广东、江苏、湖北的受访者最多。中国大陆以外，此次问卷也有台湾、香港、澳门、新加坡的朋友参与。 ![](figs_model/unnamed-chunk-2-1.png)
 
 年龄和在北美居住的年限
 ----------------------
 
 受访者的平均年龄大概是29岁，最年轻的受访者19岁，而最大的几位受访者的年龄在47岁以上。受访者平均在北美居住了六年，其中最少的今年刚到，最多以为的已经居住了27年以上。受访人平均到达北美的约为22岁，而且绝大部分都在20-30岁之间到达北美。这几项的分布都非常好，说明我们的样本质量好，能据此做出一些让人信服的推断。
 
-![](figs/unnamed-chunk-3-1.png)![](figs/unnamed-chunk-3-2.png)![](figs/unnamed-chunk-3-3.png)
+![](figs_model/unnamed-chunk-3-1.png)![](figs_model/unnamed-chunk-3-2.png)![](figs_model/unnamed-chunk-3-3.png)
 
 性别和性取向
 ------------
@@ -32,12 +32,12 @@ CRN北美性少数政治倾向调查问卷
 教育
 ----
 
-![](figs/unnamed-chunk-6-1.png)
+![](figs_model/unnamed-chunk-6-1.png)
 
 收入
 ----
 
-![](figs/unnamed-chunk-7-1.png)![](figs/unnamed-chunk-7-2.png)
+![](figs_model/unnamed-chunk-7-1.png)![](figs_model/unnamed-chunk-7-2.png)
 
 政治观点
 ========
@@ -124,9 +124,9 @@ CRN北美性少数政治倾向调查问卷
     ## 
     ## 
 
-![](figs/unnamed-chunk-11-1.png)
+![](figs_model/unnamed-chunk-11-1.png)
 
-![](figs/unnamed-chunk-12-1.png)
+![](figs_model/unnamed-chunk-12-1.png)
 
     ##                     vote_primary16 Sanders Clinton Trump Kasich Rubio Cruz 不投票 其他
     ## party_id vote_gen16                                                                   
@@ -191,9 +191,9 @@ CRN北美性少数政治倾向调查问卷
 
 接近七成的人认为自己和中国在很大程度上具有共同命运，而只有大概两成的人认为自己和美国有共同命运。接近八成的人认为自己和性少数群体拥有共同命运。认为和中国有共同命运的人也大多认为自己和lgbt群体有共同的命运。有四分之一的人在两个维度上的打分都是5. 这背后的机制可能是有些人就比较爱群体吧。美国人的身份是被放在最后的。44%的人认为自己的性少数的身份先于中国人的身份，而28%的人认为自己中国的身份先于性少数身份。 那身份认同的排序是否让LGBT群体认为性少数群体的利益要为国家利益让路呢?是的。"性少数 &gt; 中国人 &gt; 美国人" 的倾向于不同意（接近七成的人倾向于不同意）。而"中国人 &gt; 性少数 &gt; 美国人"倾向于同意（接近一半的人对这个说法保持中立，两成倾向于同意）。
 
-![](figs/unnamed-chunk-16-1.png)
+![](figs_model/unnamed-chunk-16-1.png)
 
 重要政策的态度
 --------------
 
-![](figs/unnamed-chunk-17-1.png)
+![](figs_model/unnamed-chunk-17-1.png)

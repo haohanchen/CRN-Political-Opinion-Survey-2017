@@ -2,7 +2,7 @@ CRN Reserach
 ================
 Haohan Chen
 
-![](figs/unnamed-chunk-1-1.png)![](figs/unnamed-chunk-1-2.png)![](figs/unnamed-chunk-1-3.png)
+![](figs_descriptive/unnamed-chunk-1-1.png)![](figs_descriptive/unnamed-chunk-1-2.png)![](figs_descriptive/unnamed-chunk-1-3.png)
 
 选举意向
 --------
