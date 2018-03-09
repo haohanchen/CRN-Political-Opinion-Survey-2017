@@ -11,7 +11,7 @@
 
     ## [1] "特朗普 (19.7%)" "希拉里 (61.3%)" "弃权 (19.1%)"
 
-<img src="figs_README/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="figs_README/unnamed-chunk-6-1.png" width="50%" style="display: block; margin: auto;" />
 
 政策偏向
 --------
