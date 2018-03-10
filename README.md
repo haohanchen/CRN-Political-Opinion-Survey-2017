@@ -9,9 +9,9 @@
 2016年大选的选择: 为什么性少数投票给特朗普？
 --------------------------------------------
 
-<img src="figs_README/election-primary-gen16-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figs_README/election-primary-gen16-1.png" width="50%" style="display: block; margin: auto;" />
 
-<img src="figs_README/election-party16-1.png" width="60%" style="display: block; margin: auto;" />
+<img src="figs_README/election-party16-1.png" width="50%" style="display: block; margin: auto;" />
 
 政策偏向
 --------
