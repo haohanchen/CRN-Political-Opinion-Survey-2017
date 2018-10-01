@@ -9,6 +9,12 @@
 我是谁
 ======
 
+![](figs_README/identity_linked_lgbt.png) ![](figs_README/identity_linked_cn.png) ![](figs_README/identity_linked_us.png) ![](figs_README/identity_linked_compare.png)
+
+![](figs_README/identity_lgbt_contact.png) ![](figs_README/identity_lgbt_contact_cn.png)
+
+![](figs_README/identity_lgbt_yield.png)
+
 我怎么参与政治
 ==============
 
