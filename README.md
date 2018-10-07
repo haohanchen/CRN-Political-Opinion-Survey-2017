@@ -88,6 +88,12 @@
 
 ![](figs_README/policy_social_marijuanna.png)
 
+![](figs_README/policy_social_gun_control.png)
+
+![](figs_README/policy_social_aa_race.png)
+
+![](figs_README/policy_social_aa_gender.png)
+
 同志身份认同和政治观点的关联
 ============================
 
