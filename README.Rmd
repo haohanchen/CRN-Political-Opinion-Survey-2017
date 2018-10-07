@@ -20,7 +20,6 @@ output:
 
 ![](figs_README/identity_linked_compare.png)
 
-
 ![](figs_README/identity_lgbt_yield.png)
 
 
