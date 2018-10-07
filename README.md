@@ -7,6 +7,7 @@
 -   [我们是谁](#我们是谁)
     -   [身份认同](#身份认同)
     -   [同志社群](#同志社群)
+    -   [同志社群参与和身份认同的关联](#同志社群参与和身份认同的关联)
 -   [我们怎么参与政治](#我们怎么参与政治)
     -   [对政治的兴趣](#对政治的兴趣)
     -   [媒体使用](#媒体使用)
@@ -45,6 +46,13 @@
 
 ![](figs_README/identity_lgbt_contact_cn.png)
 
+同志社群参与和身份认同的关联
+----------------------------
+
+![](figs_README/identity_cor1.png)
+
+![](figs_README/identity_cor2.png)
+
 我们怎么参与政治
 ================
 
@@ -78,6 +86,8 @@
 --------------
 
 ![](figs_README/identity_party_id.png)
+
+![](figs_README/vote_primary.png)
 
 ![](figs_README/vote_general.png)
 

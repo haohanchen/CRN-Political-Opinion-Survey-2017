@@ -30,7 +30,11 @@ output:
 
 ![](figs_README/identity_lgbt_contact_cn.png)
 
+## 同志社群参与和身份认同的关联
 
+![](figs_README/identity_cor1.png)
+
+![](figs_README/identity_cor2.png)
 
 
 # 我们怎么参与政治
@@ -63,6 +67,8 @@ output:
 ## 2016大选的选择
 
 ![](figs_README/identity_party_id.png)
+
+![](figs_README/vote_primary.png)
 
 ![](figs_README/vote_general.png)
 
