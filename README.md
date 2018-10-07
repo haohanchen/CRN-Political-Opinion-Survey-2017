@@ -1,8 +1,40 @@
 北美华人同志的身份政治
 ================
-华人彩虹联盟（CRN）社群调研小组 好汉陈 邵帅
+华人彩虹联盟（CRN）社群调研小组 好汉陈 邵帅 Mario
 2018年9月30日
 
+<style type="text/css">
+
+body{ /* Normal  */
+      font-size: 12px;
+  }
+td {  /* Table  */
+  font-size: 8px;
+}
+h1.title {
+  font-size: 38px;
+  color: DarkRed;
+}
+h1 { /* Header 1 */
+  font-size: 14px;
+  color: DarkBlue;
+}
+h2 { /* Header 2 */
+    font-size: 12px;
+  color: DarkBlue;
+}
+h3 { /* Header 3 */
+  font-size: 11px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+}
+code.r{ /* Code block */
+    font-size: 10px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
 介绍
 ====
 
