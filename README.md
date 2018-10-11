@@ -89,7 +89,10 @@
 我们社区在2016的大选中明显支持民主党。而且对桑德斯的支持度也也相当的高。总体偏左。
 ![](figs_README/identity_party_id.png)
 
+这里我们专门找到了NBC在大选前对美国LBGT所做的比较。可以看到，在表态的美国LGBT中，支持希拉里是支持特朗普的3.5倍，而在我们的社区内，这个数字是3。所以说，尽管我们的群体偏左，但和美国其他的LGBT比起来，我们更偏保守。在政治光谱中，我们夹在了偏左的LGBT和偏右的华人之间。对CRN管理者而言，如果未来对政治人物进行背书，必须非常的小心。
 ![](figs_README/vote_primary.png)
+
+![](figs_README/NBC_LGBT_survey.png)
 
 ![](figs_README/vote_general.png)
 
