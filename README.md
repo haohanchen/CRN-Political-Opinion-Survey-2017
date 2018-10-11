@@ -31,6 +31,7 @@
 作为双重少数群体的华人LGBT，处在多种身份的交叉地带。
 通过调查我们发现，CRN社区内部LGBT的身份属性是最强的，其次是中国，最后是美国。
 对母国的认同度高于移民国家应该在初代移民中具有普遍性。但LGBT之于母国的认同之上的事实让我们看到性取向对人的影响之大。也让我们感受到建设性少数群体社区的重要性，CRN任重道远。
+
 ![](figs_README/identity_linked_lgbt.png)
 
 ![](figs_README/identity_linked_cn.png)
@@ -116,7 +117,8 @@
 ![](figs_README/policy_economy_aca.png)
 
 ### 社会议题
-非法移民，大麻，强制合法化等问题上，我们的社区的诉求和其他华人总体一致。。
+非法移民，大麻，强制合法化等问题上，我们的社区的诉求和其他华人总体一致。
+
 ![](figs_README/policy_social_immigrant1.png)
 
 ![](figs_README/policy_social_immigrant2.png)
